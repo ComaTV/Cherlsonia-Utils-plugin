@@ -10,12 +10,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MuteCommand implements CommandExecutor {
     // Map: playerName -> muteEndTimestamp (0 = permanent)
-    public static final Map<String, Long> mutedPlayers = new HashMap<>();
+    public static final Set<String> mutedPlayers = new HashSet<>();
     private static File mutedFile;
     private static YamlConfiguration mutedConfig;
 
@@ -32,16 +32,15 @@ public class MuteCommand implements CommandExecutor {
         mutedPlayers.clear();
         if (mutedConfig.contains("muted")) {
             for (String name : mutedConfig.getConfigurationSection("muted").getKeys(false)) {
-                long until = mutedConfig.getLong("muted." + name);
-                mutedPlayers.put(name, until);
+                mutedPlayers.add(name);
             }
         }
     }
 
     public static void saveMutes() {
         mutedConfig.set("muted", null);
-        for (Map.Entry<String, Long> entry : mutedPlayers.entrySet()) {
-            mutedConfig.set("muted." + entry.getKey(), entry.getValue());
+        for (String name : mutedPlayers) {
+            mutedConfig.set("muted." + name, true);
         }
         try { mutedConfig.save(mutedFile); } catch (IOException ignored) {}
     }
@@ -53,12 +52,13 @@ public class MuteCommand implements CommandExecutor {
             return true;
         }
         Player player = (Player) sender;
-        if (!player.isOp() && !player.getScoreboardTags().contains("mod")) {
+        String adminTag = org.utils.utils.utils.MessageUtils.getAdminPermissionTag();
+        if (!player.isOp() && !player.getScoreboardTags().contains(adminTag)) {
             MessageUtils.sendMessage(player, "operator_only");
             return true;
         }
-        if (args.length < 1 || args.length > 2) {
-            MessageUtils.sendMessage(player, "&cUsage: /mute <player> [minutes]");
+        if (args.length != 1) {
+            MessageUtils.sendMessage(player, "&cUsage: /mute <player>");
             return true;
         }
         Player target = Bukkit.getPlayerExact(args[0]);
@@ -67,25 +67,10 @@ public class MuteCommand implements CommandExecutor {
             return true;
         }
         String targetName = target.getName().toLowerCase();
-        long until = 0;
-        if (args.length == 2) {
-            try {
-                int minutes = Integer.parseInt(args[1]);
-                until = System.currentTimeMillis() + minutes * 60_000L;
-            } catch (NumberFormatException e) {
-                MessageUtils.sendMessage(player, "&cInvalid number of minutes.");
-                return true;
-            }
-        }
-        mutedPlayers.put(targetName, until);
+        mutedPlayers.add(targetName);
         saveMutes();
-        if (until == 0) {
-            MessageUtils.sendMessage(player, "&aMuted &e" + target.getName() + "&a permanently.");
-            MessageUtils.sendMessage(target, "&cYou have been muted permanently by a moderator.");
-        } else {
-            MessageUtils.sendMessage(player, "&aMuted &e" + target.getName() + "&a for &e" + args[1] + "&a minute(s).");
-            MessageUtils.sendMessage(target, "&cYou have been muted for &e" + args[1] + "&c minute(s) by a moderator.");
-        }
+        MessageUtils.sendMessage(player, "&aMuted &e" + target.getName() + "&a.");
+        MessageUtils.sendMessage(target, "&cYou have been muted by a moderator.");
         return true;
     }
 }

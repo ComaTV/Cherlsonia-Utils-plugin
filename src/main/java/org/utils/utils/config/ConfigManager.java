@@ -58,4 +58,8 @@ public class ConfigManager {
         }
         return message;
     }
+
+    public String getAdminPermissionTag() {
+        return config.getString("admin_permission_tag", "mod");
+    }
 }

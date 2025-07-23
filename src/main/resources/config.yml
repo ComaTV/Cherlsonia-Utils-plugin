@@ -42,6 +42,9 @@ rtpa_cooldown: 300
 # Clearchat message
 clearchat_message: "&aChat has been cleared by an admin!"
 
+# Tagul necesar pentru acces la comenzile de admin/mod
+admin_permission_tag: "mod"
+
 # Rules (multi-line)
 rules: |
   1. Be respectful to all players.

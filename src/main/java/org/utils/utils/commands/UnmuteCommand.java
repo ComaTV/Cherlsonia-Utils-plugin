@@ -14,7 +14,8 @@ public class UnmuteCommand implements CommandExecutor {
             return true;
         }
         Player player = (Player) sender;
-        if (!player.isOp() && !player.getScoreboardTags().contains("mod")) {
+        String adminTag = org.utils.utils.utils.MessageUtils.getAdminPermissionTag();
+        if (!player.isOp() && !player.getScoreboardTags().contains(adminTag)) {
             MessageUtils.sendMessage(player, "operator_only");
             return true;
         }
@@ -23,7 +24,7 @@ public class UnmuteCommand implements CommandExecutor {
             return true;
         }
         String targetName = args[0].toLowerCase();
-        boolean removed = org.utils.utils.commands.MuteCommand.mutedPlayers.remove(targetName) != null;
+        boolean removed = org.utils.utils.commands.MuteCommand.mutedPlayers.remove(targetName);
         org.utils.utils.commands.MuteCommand.saveMutes();
         if (removed) {
             MessageUtils.sendMessage(player, "&aUnmuted &e" + args[0] + "&a.");

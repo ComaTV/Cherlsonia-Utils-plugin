@@ -41,5 +41,12 @@ public class MessageUtils {
         sendMessage(sender, "&e" + message);
     }
 
+    public static String getAdminPermissionTag() {
+        if (configManager != null) {
+            return configManager.getAdminPermissionTag();
+        }
+        return "mod";
+    }
+
 
 } 
