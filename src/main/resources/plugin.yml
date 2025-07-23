@@ -1,0 +1,45 @@
+name: CherlsoniaUtils
+version: '1.0'
+main: org.utils.utils.Main
+api-version: '1.21'
+load: STARTUP
+commands:
+  spawn:
+    description: Teleports the player to spawn
+    usage: /spawn
+  tpa:
+    description: Send a teleport request to another player
+    usage: /tpa <player>
+  tpaccept:
+    description: Accept a teleport request
+    usage: /tpaccept
+  tpadeny:
+    description: Deny a teleport request
+    usage: /tpadeny
+  help:
+    description: Shows the help menu with server commands
+    usage: /help
+  rtpa:
+    description: Teleports the player to a random location (5 min cooldown)
+    usage: /rtpa
+  feed:
+    description: Restores your hunger (admin/mod)
+    usage: /feed
+  heal:
+    description: Restores your health (admin/mod)
+    usage: /heal
+  clearchat:
+    description: Clears the chat for everyone (admin/mod)
+    usage: /clearchat
+  rules:
+    description: Shows the server rules
+    usage: /rules
+  admintp:
+    description: Teleports you to any player (mod or op only)
+    usage: /admintp <player>
+  mute:
+    description: Mute a player (mod or op only)
+    usage: /mute <player>
+  unmute:
+    description: Unmute a player (mod or op only)
+    usage: /unmute <player>

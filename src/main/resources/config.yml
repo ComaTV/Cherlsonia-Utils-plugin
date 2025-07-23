@@ -1,0 +1,51 @@
+# Cherlsonia Utils Plugin Configuration
+
+# Message Configuration
+messages:
+  prefix: "&8[&bCherlsonia&8] &r"
+  player_only: "&cOnly players can use this command."
+  operator_only: "&cOnly operators can use this command."
+  invalid_item: "&cInvalid item: %item%"
+  invalid_name: "&cInvalid warp name! Use only letters, numbers, and underscores (max 32 characters)."
+
+# Spawn location (world, x, y, z, yaw, pitch)
+spawn:
+  world: "world"
+  x: 0.5
+  y: 64.0
+  z: 0.5
+  yaw: 0.0
+  pitch: 0.0
+
+# Help command prompt (multi-line, supports color codes)
+help_prompt: |
+  /help opens this menu
+  /spawn teleports you to the cneter if the world
+  /menu opens the main menu
+  /faction Lets you make and manage your faction
+  /claim allows you to claim large amount of land
+  /w lets you send private message to someone
+  /waypoint lets you teleport to major world locations
+  /tpa allows you to tpa to somone
+  /ptpa allows you to set a partner to tp to
+  /rtpa teleports you randomly in the world (btw world boarder is 16k 16k and add a 5 min cooldown for each use)
+  /tpaccept accept a tpa request
+  /tpadeny deny a tpa request
+  /investor lets investors claim there donator rewards
+  /donator lets donators claim there donator rewards
+  /home lets donators set a home anywhere in the world
+  /auction opens auction menu
+
+# RTPA cooldown in seconds
+rtpa_cooldown: 300
+
+# Clearchat message
+clearchat_message: "&aChat has been cleared by an admin!"
+
+# Rules (multi-line)
+rules: |
+  1. Be respectful to all players.
+  2. No cheating or exploiting bugs.
+  3. No griefing or stealing.
+  4. No spamming or advertising.
+  5. Follow staff instructions at all times.
