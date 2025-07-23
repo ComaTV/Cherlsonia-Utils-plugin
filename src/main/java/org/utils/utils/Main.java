@@ -5,6 +5,7 @@ import org.utils.utils.commands.CommandManager;
 import org.utils.utils.utils.MessageUtils;
 import org.utils.utils.config.ConfigManager;
 import org.utils.utils.events.EventManager;
+import org.utils.utils.commands.MuteCommand;
 
 public class Main extends JavaPlugin {
     private CommandManager commandManager;
@@ -19,6 +20,7 @@ public class Main extends JavaPlugin {
         commandManager = new CommandManager();
         eventManager = new EventManager(this);
         eventManager.registerAllListeners();
+        MuteCommand.init(this);
         registerCommands();
         getLogger().info("Cherlsonia Utils Plugin enabled!");
     }

@@ -23,7 +23,8 @@ public class UnmuteCommand implements CommandExecutor {
             return true;
         }
         String targetName = args[0].toLowerCase();
-        boolean removed = org.utils.utils.commands.MuteCommand.mutedPlayers.remove(targetName);
+        boolean removed = org.utils.utils.commands.MuteCommand.mutedPlayers.remove(targetName) != null;
+        org.utils.utils.commands.MuteCommand.saveMutes();
         if (removed) {
             MessageUtils.sendMessage(player, "&aUnmuted &e" + args[0] + "&a.");
         } else {

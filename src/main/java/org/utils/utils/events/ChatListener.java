@@ -10,9 +10,16 @@ public class ChatListener implements Listener {
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         String name = event.getPlayer().getName().toLowerCase();
-        if (MuteCommand.mutedPlayers.contains(name)) {
-            event.setCancelled(true);
-            MessageUtils.sendMessage(event.getPlayer(), "&cYou are muted and cannot speak in chat.");
+        Long until = org.utils.utils.commands.MuteCommand.mutedPlayers.get(name);
+        if (until != null) {
+            if (until != 0 && System.currentTimeMillis() > until) {
+                // Mute expirat, scoate automat
+                org.utils.utils.commands.MuteCommand.mutedPlayers.remove(name);
+                org.utils.utils.commands.MuteCommand.saveMutes();
+            } else {
+                event.setCancelled(true);
+                MessageUtils.sendMessage(event.getPlayer(), "&cYou are muted and cannot speak in chat.");
+            }
         }
     }
 }
