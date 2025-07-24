@@ -39,6 +39,8 @@ help_prompt: |
 # RTPA cooldown in seconds
 rtpa_cooldown: 300
 
+tpa_cost: 100
+
 # Clearchat message
 clearchat_message: "&aChat has been cleared by an admin!"
 
@@ -52,3 +54,5 @@ rules: |
   3. No griefing or stealing.
   4. No spamming or advertising.
   5. Follow staff instructions at all times.
+
+tpa-cost: 5000

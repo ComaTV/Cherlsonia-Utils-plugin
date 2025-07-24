@@ -8,14 +8,18 @@ import org.utils.utils.events.EventManager;
 import org.utils.utils.commands.MuteCommand;
 
 public class Main extends JavaPlugin {
+    private static Main instance;
+    private static ConfigManager staticConfigManager;
     private CommandManager commandManager;
     private ConfigManager configManager;
     private EventManager eventManager;
 
     @Override
     public void onEnable() {
+        instance = this;
         saveDefaultConfig();
         configManager = new ConfigManager(this);
+        staticConfigManager = configManager;
         MessageUtils.setConfigManager(configManager);
         commandManager = new CommandManager();
         eventManager = new EventManager(this);
@@ -44,5 +48,9 @@ public class Main extends JavaPlugin {
         getCommand("admintp").setExecutor(new org.utils.utils.commands.AdminTpCommand());
         getCommand("mute").setExecutor(new org.utils.utils.commands.MuteCommand());
         getCommand("unmute").setExecutor(new org.utils.utils.commands.UnmuteCommand());
+    }
+
+    public static ConfigManager getConfigManager() {
+        return staticConfigManager;
     }
 }

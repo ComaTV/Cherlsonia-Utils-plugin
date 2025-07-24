@@ -62,4 +62,8 @@ public class ConfigManager {
     public String getAdminPermissionTag() {
         return config.getString("admin_permission_tag", "mod");
     }
+
+    public int getTpaCost() {
+        return config.getInt("tpa_cost", 100);
+    }
 }
