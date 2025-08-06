@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MuteCommand implements CommandExecutor {
-    // Map: playerName -> muteEndTimestamp (0 = permanent)
     public static final Set<String> mutedPlayers = new HashSet<>();
     private static File mutedFile;
     private static YamlConfiguration mutedConfig;
@@ -22,7 +21,10 @@ public class MuteCommand implements CommandExecutor {
     public static void init(JavaPlugin plugin) {
         mutedFile = new File(plugin.getDataFolder(), "muted.yml");
         if (!mutedFile.exists()) {
-            try { mutedFile.createNewFile(); } catch (IOException ignored) {}
+            try {
+                mutedFile.createNewFile();
+            } catch (IOException ignored) {
+            }
         }
         mutedConfig = YamlConfiguration.loadConfiguration(mutedFile);
         loadMutes();
@@ -42,7 +44,10 @@ public class MuteCommand implements CommandExecutor {
         for (String name : mutedPlayers) {
             mutedConfig.set("muted." + name, true);
         }
-        try { mutedConfig.save(mutedFile); } catch (IOException ignored) {}
+        try {
+            mutedConfig.save(mutedFile);
+        } catch (IOException ignored) {
+        }
     }
 
     @Override

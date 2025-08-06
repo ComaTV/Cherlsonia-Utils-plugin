@@ -13,6 +13,7 @@ public class EventManager {
     public EventManager(Plugin plugin) {
         this.plugin = plugin;
         listeners.add(new ChatListener());
+        listeners.add(new CombatListener());
     }
 
     public void registerAllListeners() {

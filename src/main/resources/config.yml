@@ -56,3 +56,23 @@ rules: |
   5. Follow staff instructions at all times.
 
 tpa-cost: 5000
+
+# Combat System Configuration
+combat:
+  # Combat timeout in seconds (how long before combat ends automatically)
+  timeout_seconds: 15
+  # Whether to show boss bars during combat
+  show_boss_bars: false
+  # Whether to prevent teleportation during combat
+  prevent_teleport: true
+  # Whether to prevent certain commands during combat
+  prevent_commands: true
+  # Messages
+  messages:
+    combat_start: "&c[Combat] You are now in combat with %opponent%!"
+    combat_end: "&a[Combat] Combat has ended!"
+    combat_logout: "&c[Combat] %player% logged out during combat!"
+    combat_logout_end: "&a[Combat] Combat has ended due to opponent logging out."
+    teleport_blocked: "&c[Combat] You cannot teleport while in combat!"
+    command_blocked: "&c[Combat] You cannot use this command while in combat!"
+    teleport_command_blocked: "&c[Combat] You cannot use teleport commands while in combat!"

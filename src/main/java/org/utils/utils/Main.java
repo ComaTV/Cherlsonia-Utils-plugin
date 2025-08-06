@@ -25,12 +25,19 @@ public class Main extends JavaPlugin {
         eventManager = new EventManager(this);
         eventManager.registerAllListeners();
         MuteCommand.init(this);
+
+        org.utils.utils.utils.CombatManager.loadConfiguration();
+
         registerCommands();
         getLogger().info("Cherlsonia Utils Plugin enabled!");
     }
 
     @Override
     public void onDisable() {
+        org.utils.utils.utils.CombatManager.clearAllCombat();
+        org.utils.utils.utils.CombatIndicator.clearAllBars();
+        org.utils.utils.utils.CombatIndicator.clearAllTimers();
+
         getLogger().info("Cherlsonia Utils Plugin disabled!");
     }
 
@@ -48,9 +55,14 @@ public class Main extends JavaPlugin {
         getCommand("admintp").setExecutor(new org.utils.utils.commands.AdminTpCommand());
         getCommand("mute").setExecutor(new org.utils.utils.commands.MuteCommand());
         getCommand("unmute").setExecutor(new org.utils.utils.commands.UnmuteCommand());
+        getCommand("combat").setExecutor(new org.utils.utils.commands.CombatCommand());
     }
 
     public static ConfigManager getConfigManager() {
         return staticConfigManager;
+    }
+
+    public static Main getInstance() {
+        return instance;
     }
 }

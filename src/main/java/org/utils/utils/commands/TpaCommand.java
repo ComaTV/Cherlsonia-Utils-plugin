@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class TpaCommand implements CommandExecutor {
-    // Map: target UUID -> requester UUID
     public static final Map<UUID, UUID> tpaRequests = new HashMap<>();
 
     @Override

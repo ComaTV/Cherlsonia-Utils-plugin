@@ -66,4 +66,8 @@ public class ConfigManager {
     public int getTpaCost() {
         return config.getInt("tpa_cost", 100);
     }
+
+    public FileConfiguration getConfig() {
+        return config;
+    }
 }

@@ -18,7 +18,6 @@ public class SpawnCommand implements CommandExecutor {
             return true;
         }
         Player player = (Player) sender;
-        // Citește coordonatele din config
         var config = JavaPlugin.getProvidingPlugin(getClass()).getConfig();
         String worldName = config.getString("spawn.world", "world");
         double x = config.getDouble("spawn.x", 0.5);

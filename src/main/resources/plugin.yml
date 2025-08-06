@@ -43,3 +43,6 @@ commands:
   unmute:
     description: Unmute a player (mod or op only)
     usage: /unmute <player>
+  combat:
+    description: Check your combat status and information
+    usage: /combat [status|help]
