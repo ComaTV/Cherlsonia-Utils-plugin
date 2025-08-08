@@ -1,7 +1,6 @@
 package org.utils.utils;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import org.utils.utils.commands.CommandManager;
 import org.utils.utils.utils.MessageUtils;
 import org.utils.utils.config.ConfigManager;
 import org.utils.utils.events.EventManager;
@@ -10,7 +9,6 @@ import org.utils.utils.commands.MuteCommand;
 public class Main extends JavaPlugin {
     private static Main instance;
     private static ConfigManager staticConfigManager;
-    private CommandManager commandManager;
     private ConfigManager configManager;
     private EventManager eventManager;
 
@@ -21,7 +19,6 @@ public class Main extends JavaPlugin {
         configManager = new ConfigManager(this);
         staticConfigManager = configManager;
         MessageUtils.setConfigManager(configManager);
-        commandManager = new CommandManager();
         eventManager = new EventManager(this);
         eventManager.registerAllListeners();
         MuteCommand.init(this);
@@ -56,6 +53,8 @@ public class Main extends JavaPlugin {
         getCommand("mute").setExecutor(new org.utils.utils.commands.MuteCommand());
         getCommand("unmute").setExecutor(new org.utils.utils.commands.UnmuteCommand());
         getCommand("combat").setExecutor(new org.utils.utils.commands.CombatCommand());
+        getCommand("admin").setExecutor(new org.utils.utils.commands.AdminMenuCommand());
+        getCommand("mod").setExecutor(new org.utils.utils.commands.ModMenuCommand());
     }
 
     public static ConfigManager getConfigManager() {

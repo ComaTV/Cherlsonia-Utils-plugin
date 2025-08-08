@@ -44,8 +44,18 @@ tpa_cost: 100
 # Clearchat message
 clearchat_message: "&aChat has been cleared by an admin!"
 
-# Tagul necesar pentru acces la comenzile de admin/mod
-admin_permission_tag: "mod"
+# Permission Configuration
+permissions:
+  # Tags for different permission levels
+  mod_tag: "mod"
+  admin_tag: "admin"
+  admin_plus_tag: "admin+"
+  owner2_tag: "Owner2"
+  
+  # Permissions for menus
+  admin_permission: "cherlsonia.admin"
+  mod_permission: "cherlsonia.mod"
+  owner2_permission: "cherlsonia.owner2"
 
 # Rules (multi-line)
 rules: |

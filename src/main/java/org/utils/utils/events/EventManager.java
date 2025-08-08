@@ -14,6 +14,7 @@ public class EventManager {
         this.plugin = plugin;
         listeners.add(new ChatListener());
         listeners.add(new CombatListener());
+        listeners.add(new MenuListener());
     }
 
     public void registerAllListeners() {
