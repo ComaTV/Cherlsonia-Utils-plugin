@@ -238,15 +238,11 @@ public class MenuListener implements Listener {
             slot++;
         }
 
-        if (page > 0) {
-            menu.setItem(45, createItem(Material.ARROW, "§aPrevious Page", "§7Click to go back"));
-        }
+        menu.setItem(45, createItem(Material.ARROW, "§aPrevious Page", "§7Click to go back"));
 
         menu.setItem(49, createItem(Material.BARRIER, "§cClose", "§7Close the menu"));
 
-        if (endIndex < players.size()) {
-            menu.setItem(53, createItem(Material.ARROW, "§aNext Page", "§7Click to go forward"));
-        }
+        menu.setItem(53, createItem(Material.ARROW, "§aNext Page", "§7Click to go forward"));
 
         player.openInventory(menu);
     }
