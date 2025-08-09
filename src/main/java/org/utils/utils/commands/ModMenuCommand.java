@@ -40,9 +40,6 @@ public class ModMenuCommand implements CommandExecutor {
         ItemStack mute = createItem(Material.BARRIER, "§cMute Players",
                 "§7Mute players for specified duration");
 
-        ItemStack playerInfo = createItem(Material.BOOK, "§eView Player Info",
-                "§7View detailed information about players");
-
         ItemStack teleport = createItem(Material.COMPASS, "§aTeleport to Players",
                 "§7Teleport to any online player");
 
@@ -58,17 +55,12 @@ public class ModMenuCommand implements CommandExecutor {
         ItemStack ban = createItem(Material.DIAMOND_SWORD, "§4Ban Players",
                 "§7Ban players from the server");
 
-        ItemStack reports = createItem(Material.PAPER, "§bView Reports",
-                "§7View player reports and complaints");
-
         menu.setItem(10, mute);
-        menu.setItem(11, playerInfo); 
         menu.setItem(12, teleport); 
         menu.setItem(13, inventories); 
         menu.setItem(14, enderChests); 
         menu.setItem(15, kick); 
         menu.setItem(16, ban); 
-        menu.setItem(22, reports);
 
         player.openInventory(menu);
     }

@@ -1,6 +1,8 @@
 package org.utils.utils.events;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -13,10 +15,9 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.utils.utils.commands.AdminMenuCommand;
-import org.utils.utils.commands.ModMenuCommand;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.utils.utils.utils.MessageUtils;
-import org.utils.utils.utils.PermissionUtils;
+import org.utils.utils.Main;
 
 public class MenuListener implements Listener {
 
@@ -34,42 +35,30 @@ public class MenuListener implements Listener {
             return;
         }
 
-        // Admin Menu
         if (title.equals("§8Admin Menu")) {
             event.setCancelled(true);
             handleAdminMenuClick(player, clickedItem);
-        }
-        // Mod Menu
-        else if (title.equals("§8Moderator Menu")) {
+        } else if (title.equals("§8Moderator Menu")) {
             event.setCancelled(true);
             handleModMenuClick(player, clickedItem);
-        }
-        // Mute duration menu
-        else if (title.startsWith("§8Mute ")) {
+        } else if (title.startsWith("§8Mute ")) {
             event.setCancelled(true);
             handleMuteDurationClick(player, clickedItem, title);
-        }
-        // Ender chest with mute menu
-        else if (title.contains(" - Ender Chest + Mute")) {
+        } else if (title.contains(" - Ender Chest + Mute")) {
             event.setCancelled(true);
             handleEnderChestMuteClick(player, clickedItem, title);
-        }
-        // Ender chest viewer
-        else if (title.endsWith("'s Ender Chest")) {
+        } else if (title.endsWith("'s Ender Chest")) {
             event.setCancelled(true);
             handleEnderChestViewerClick(player, event, title);
-        }
-        // Inventory viewer
-        else if (title.endsWith("'s Inventory")) {
+        } else if (title.endsWith("'s Inventory")) {
             event.setCancelled(true);
             handleInventoryViewerClick(player, event, title);
-        }
-        else if (title.equals("§8Operators & Admin Tags")) {
+        } else if (title.equals("§8Operators & Admin Tags")) {
             event.setCancelled(true);
 
             if (!(clickedItem.getType() == Material.PLAYER_HEAD)) return;
 
-            String targetName = clickedItem.getItemMeta().getDisplayName().substring(2); // scoate §a
+            String targetName = clickedItem.getItemMeta().getDisplayName().substring(2);
             Player target = Bukkit.getPlayer(targetName);
 
             if (target == null) {
@@ -78,23 +67,20 @@ public class MenuListener implements Listener {
             }
 
             if (event.isLeftClick()) {
-                // deschidem meniul de management pentru acel player
                 openRoleManagementMenu(player, target);
             } else if (event.isRightClick()) {
-                // afișăm rolurile în chat
                 boolean isOp = target.isOp();
-                boolean isMod = PermissionUtils.hasTag(target, "mod");
-                boolean isAdmin = PermissionUtils.hasTag(target, "admin");
-                boolean isAdminPlus = PermissionUtils.hasTag(target, "admin+");
+                boolean isMod = target.getScoreboardTags().contains("mod");
+                boolean isAdmin = target.getScoreboardTags().contains("admin");
+                boolean isAdminPlus = target.getScoreboardTags().contains("admin+");
 
-                player.sendMessage("§6=== Roluri pentru §e" + target.getName() + "§6 ===");
-                player.sendMessage("§eOperator: " + (isOp ? "§aDa" : "§cNu"));
-                player.sendMessage("§eModerator: " + (isMod ? "§aDa" : "§cNu"));
-                player.sendMessage("§eAdmin: " + (isAdmin ? "§aDa" : "§cNu"));
-                player.sendMessage("§eAdmin+: " + (isAdminPlus ? "§aDa" : "§cNu"));
+                player.sendMessage("§6=== Roles for §e" + target.getName() + "§6 ===");
+                player.sendMessage("§eOperator: " + (isOp ? "§aYes" : "§cNo"));
+                player.sendMessage("§eModerator: " + (isMod ? "§aYes" : "§cNo"));
+                player.sendMessage("§eAdmin: " + (isAdmin ? "§aYes" : "§cNo"));
+                player.sendMessage("§eAdmin+: " + (isAdminPlus ? "§aYes" : "§cNo"));
             }
-        }
-        else if (title.startsWith("§8Manage Roles - ")) {
+        } else if (title.startsWith("§8Manage Roles - ")) {
             event.setCancelled(true);
 
             String targetName = title.substring("§8Manage Roles - ".length());
@@ -109,43 +95,38 @@ public class MenuListener implements Listener {
 
             switch (itemName) {
                 case "§aToggle Moderator":
-                    if (PermissionUtils.hasTag(target, "mod")) {
-                        PermissionUtils.removeTag(target, "mod");
-                        MessageUtils.sendMessage(player, "§cAi scos Moderator de la " + target.getName());
+                    if (target.getScoreboardTags().contains("mod")) {
+                        target.getScoreboardTags().remove("mod");
+                        MessageUtils.sendMessage(player, "§cRemoved Moderator from " + target.getName());
                     } else {
-                        PermissionUtils.addTag(target, "mod");
-                        MessageUtils.sendMessage(player, "§aAi dat Moderator la " + target.getName());
+                        target.getScoreboardTags().add("mod");
+                        MessageUtils.sendMessage(player, "§aGave Moderator to " + target.getName());
                     }
                     break;
 
                 case "§bToggle Admin":
-                    if (PermissionUtils.hasTag(target, "admin")) {
-                        PermissionUtils.removeTag(target, "admin");
-                        MessageUtils.sendMessage(player, "§cAi scos Admin de la " + target.getName());
+                    if (target.getScoreboardTags().contains("admin")) {
+                        target.getScoreboardTags().remove("admin");
+                        MessageUtils.sendMessage(player, "§cRemoved Admin from " + target.getName());
                     } else {
-                        PermissionUtils.addTag(target, "admin");
-                        MessageUtils.sendMessage(player, "§aAi dat Admin la " + target.getName());
+                        target.getScoreboardTags().add("admin");
+                        MessageUtils.sendMessage(player, "§aGave Admin to " + target.getName());
                     }
                     break;
 
                 case "§cToggle Admin+":
-                    if (PermissionUtils.hasTag(target, "admin+")) {
-                        PermissionUtils.removeTag(target, "admin+");
-                        target.setOp(false);
-                        MessageUtils.sendMessage(player, "§cAi scos Admin+ de la " + target.getName());
+                    if (target.getScoreboardTags().contains("admin+")) {
+                        target.getScoreboardTags().remove("admin+");
+                        MessageUtils.sendMessage(player, "§cRemoved Admin+ from " + target.getName());
                     } else {
-                        PermissionUtils.addTag(target, "admin+");
-                        target.setOp(true);
-                        MessageUtils.sendMessage(player, "§aAi dat Admin+ la " + target.getName());
+                        target.getScoreboardTags().add("admin+");
+                        MessageUtils.sendMessage(player, "§aGave Admin+ to " + target.getName());
                     }
                     break;
             }
 
-            // redeschidem meniul ca să vadă modificările
             openRoleManagementMenu(player, target);
         }
-
-
     }
 
     private void handleAdminMenuClick(Player player, ItemStack item) {
@@ -153,39 +134,30 @@ public class MenuListener implements Listener {
 
         switch (itemName) {
             case "§bVanish":
-                // Vanish implementation (requires external plugin)
                 MessageUtils.sendMessage(player, "§aVanish activated! (Requires SuperVanish plugin)");
                 break;
-
             case "§aSpectator Mode":
                 player.setGameMode(GameMode.SPECTATOR);
                 MessageUtils.sendMessage(player, "§aSpectator mode activated!");
                 break;
-
             case "§eSurvival Mode":
                 player.setGameMode(GameMode.SURVIVAL);
                 MessageUtils.sendMessage(player, "§aSurvival mode activated!");
                 break;
-
             case "§6Manage Claims":
-                // Claims management implementation
                 MessageUtils.sendMessage(player, "§6Claims management menu - in development");
                 break;
-
             case "§dMute Players":
-                openPlayerSelectorMenu(player, "mute_only");
+                openPlayerSelectorMenu(player, "mute_only", 0);
                 break;
-
             case "§cAll Current Operators and Admin Tags":
                 openOperatorManagementMenu(player);
                 break;
-
             case "§5View Ender Chests":
-                openPlayerSelectorMenu(player, "enderchest");
+                openPlayerSelectorMenu(player, "enderchest", 0);
                 break;
-
             case "§fView Inventory":
-                openPlayerSelectorMenu(player, "inventory");
+                openPlayerSelectorMenu(player, "inventory", 0);
                 break;
         }
     }
@@ -198,13 +170,13 @@ public class MenuListener implements Listener {
             if (slot >= 54) break;
 
             boolean isOp = onlinePlayer.isOp();
-            boolean isMod = PermissionUtils.hasTag(onlinePlayer, "mod");
-            boolean isAdmin = PermissionUtils.hasTag(onlinePlayer, "admin");
-            boolean isAdminPlus = PermissionUtils.hasTag(onlinePlayer, "admin+");
+            boolean isMod = onlinePlayer.getScoreboardTags().contains("mod");
+            boolean isAdmin = onlinePlayer.getScoreboardTags().contains("admin");
+            boolean isAdminPlus = onlinePlayer.getScoreboardTags().contains("admin+");
 
             if (isOp || isMod || isAdmin || isAdminPlus) {
                 ItemStack head = new ItemStack(Material.PLAYER_HEAD);
-                org.bukkit.inventory.meta.SkullMeta meta = (org.bukkit.inventory.meta.SkullMeta) head.getItemMeta();
+                SkullMeta meta = (SkullMeta) head.getItemMeta();
                 meta.setOwningPlayer(onlinePlayer);
                 meta.setDisplayName("§a" + onlinePlayer.getName());
                 head.setItemMeta(meta);
@@ -216,60 +188,64 @@ public class MenuListener implements Listener {
 
         player.openInventory(menu);
     }
+
     private void handleModMenuClick(Player player, ItemStack item) {
         String itemName = item.getItemMeta().getDisplayName();
 
         switch (itemName) {
             case "§cMute Players":
-                openPlayerSelectorMenu(player, "mute");
+                openPlayerSelectorMenu(player, "mute", 0);
                 break;
-
             case "§eView Player Info":
-                openPlayerSelectorMenu(player, "info");
+                openPlayerSelectorMenu(player, "info", 0);
                 break;
-
             case "§aTeleport to Players":
-                openPlayerSelectorMenu(player, "teleport");
+                openPlayerSelectorMenu(player, "teleport", 0);
                 break;
-
             case "§fView Player Inventories":
-                openPlayerSelectorMenu(player, "inventory");
+                openPlayerSelectorMenu(player, "inventory", 0);
                 break;
-
             case "§5View Player Ender Chests":
-                openPlayerSelectorMenu(player, "enderchest");
+                openPlayerSelectorMenu(player, "enderchest", 0);
                 break;
-
             case "§6Kick Players":
-                openPlayerSelectorMenu(player, "kick");
+                openPlayerSelectorMenu(player, "kick", 0);
                 break;
-
             case "§4Ban Players":
-                openPlayerSelectorMenu(player, "ban");
-                break;
-
-            case "§bView Reports":
-                MessageUtils.sendMessage(player, "§bReports system - in development");
+                openPlayerSelectorMenu(player, "ban", 0);
                 break;
         }
     }
 
-    private void openPlayerSelectorMenu(Player player, String action) {
-        Inventory menu = Bukkit.createInventory(null, 54, "§8Select Player - " + action.toUpperCase());
+    private void openPlayerSelectorMenu(Player player, String action, int page) {
+        Inventory menu = Bukkit.createInventory(null, 54, "§8Select Player - " + action.toUpperCase() + " - Page " + page);
+
+        List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+        int startIndex = page * 45;
+        int endIndex = Math.min(startIndex + 45, players.size());
 
         int slot = 0;
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (slot >= 54)
-                break;
+        for (int i = startIndex; i < endIndex; i++) {
+            Player onlinePlayer = players.get(i);
 
             ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
-            org.bukkit.inventory.meta.SkullMeta meta = (org.bukkit.inventory.meta.SkullMeta) playerHead.getItemMeta();
+            SkullMeta meta = (SkullMeta) playerHead.getItemMeta();
             meta.setDisplayName("§a" + onlinePlayer.getName());
             meta.setOwningPlayer(onlinePlayer);
             playerHead.setItemMeta(meta);
 
             menu.setItem(slot, playerHead);
             slot++;
+        }
+
+        if (page > 0) {
+            menu.setItem(45, createItem(Material.ARROW, "§aPrevious Page", "§7Click to go back"));
+        }
+
+        menu.setItem(49, createItem(Material.BARRIER, "§cClose", "§7Close the menu"));
+
+        if (endIndex < players.size()) {
+            menu.setItem(53, createItem(Material.ARROW, "§aNext Page", "§7Click to go forward"));
         }
 
         player.openInventory(menu);
@@ -289,11 +265,32 @@ public class MenuListener implements Listener {
             return;
         }
 
-        // Handle player selector menus
         if (title.startsWith("§8Select Player - ")) {
             event.setCancelled(true);
-            String action = title.substring("§8Select Player - ".length());
-            String targetPlayerName = clickedItem.getItemMeta().getDisplayName().substring(2); // Remove "§a" prefix
+
+            String[] parts = title.split(" - Page ");
+            String actionRaw = parts[0].substring("§8Select Player - ".length());
+            String action = actionRaw.toLowerCase();
+            int page = (parts.length > 1) ? Integer.parseInt(parts[1]) : 0;
+
+            if (clickedItem.getType() == Material.ARROW) {
+                String name = clickedItem.getItemMeta().getDisplayName();
+                if (name.contains("Previous") && page > 0) {
+                    openPlayerSelectorMenu(player, action, page - 1);
+                } else if (name.contains("Next")) {
+                    openPlayerSelectorMenu(player, action, page + 1);
+                }
+                return;
+            }
+
+            if (clickedItem.getType() == Material.BARRIER) {
+                player.closeInventory();
+                return;
+            }
+
+            if (clickedItem.getType() != Material.PLAYER_HEAD) return;
+
+            String targetPlayerName = clickedItem.getItemMeta().getDisplayName().substring(2);
             Player targetPlayer = Bukkit.getPlayer(targetPlayerName);
 
             if (targetPlayer == null) {
@@ -301,7 +298,7 @@ public class MenuListener implements Listener {
                 return;
             }
 
-            handlePlayerAction(player, targetPlayer, action);
+            handlePlayerAction(player, targetPlayer, action.toUpperCase());
         }
     }
 
@@ -356,7 +353,6 @@ public class MenuListener implements Listener {
         Inventory playerInventory = target.getInventory();
         Inventory viewer = Bukkit.createInventory(null, 54, "§8" + target.getName() + "'s Inventory");
 
-        // Copy main inventory (slots 0-35)
         for (int i = 0; i < 36; i++) {
             ItemStack item = playerInventory.getItem(i);
             if (item != null) {
@@ -364,26 +360,18 @@ public class MenuListener implements Listener {
             }
         }
 
-        // Copy armor slots (slots 36-39)
         ItemStack helmet = target.getInventory().getHelmet();
         ItemStack chestplate = target.getInventory().getChestplate();
         ItemStack leggings = target.getInventory().getLeggings();
         ItemStack boots = target.getInventory().getBoots();
 
-        if (helmet != null)
-            viewer.setItem(36, helmet.clone());
-        if (chestplate != null)
-            viewer.setItem(37, chestplate.clone());
-        if (leggings != null)
-            viewer.setItem(38, leggings.clone());
-        if (boots != null)
-            viewer.setItem(39, boots.clone());
+        if (helmet != null) viewer.setItem(36, helmet.clone());
+        if (chestplate != null) viewer.setItem(37, chestplate.clone());
+        if (leggings != null) viewer.setItem(38, leggings.clone());
+        if (boots != null) viewer.setItem(39, boots.clone());
 
-        // Copy offhand (slot 40)
         ItemStack offhand = target.getInventory().getItemInOffHand();
-        if (offhand != null) {
-            viewer.setItem(40, offhand.clone());
-        }
+        if (offhand != null) viewer.setItem(40, offhand.clone());
 
         admin.openInventory(viewer);
         MessageUtils.sendMessage(admin, "§aViewing " + target.getName() + "'s inventory!");
@@ -433,19 +421,19 @@ public class MenuListener implements Listener {
 
         switch (itemName) {
             case "§cMute 5 Minutes":
-                mutePlayer(admin, target, 5 * 60 * 1000); 
+                mutePlayer(admin, target, 5 * 60 * 1000);
                 break;
             case "§cMute 15 Minutes":
-                mutePlayer(admin, target, 15 * 60 * 1000); 
+                mutePlayer(admin, target, 15 * 60 * 1000);
                 break;
             case "§cMute 30 Minutes":
                 mutePlayer(admin, target, 30 * 60 * 1000);
                 break;
             case "§cMute 1 Hour":
-                mutePlayer(admin, target, 60 * 60 * 1000); 
+                mutePlayer(admin, target, 60 * 60 * 1000);
                 break;
             case "§cMute Permanent":
-                mutePlayer(admin, target, -1); 
+                mutePlayer(admin, target, -1);
                 break;
         }
     }
@@ -483,13 +471,13 @@ public class MenuListener implements Listener {
     private void mutePlayer(Player admin, Player target, long duration) {
         if (duration == -1) {
             target.setMetadata("muted",
-                    new org.bukkit.metadata.FixedMetadataValue(org.utils.utils.Main.getInstance(), true));
+                    new org.bukkit.metadata.FixedMetadataValue(Main.getInstance(), true));
             MessageUtils.sendMessage(admin, "§aPermanently muted " + target.getName() + "!");
             MessageUtils.sendMessage(target, "§cYou have been permanently muted by " + admin.getName() + "!");
         } else {
             long endTime = System.currentTimeMillis() + duration;
             target.setMetadata("muted_until",
-                    new org.bukkit.metadata.FixedMetadataValue(org.utils.utils.Main.getInstance(), endTime));
+                    new org.bukkit.metadata.FixedMetadataValue(Main.getInstance(), endTime));
 
             String durationText = formatDuration(duration);
             MessageUtils.sendMessage(admin, "§aMuted " + target.getName() + " for " + durationText + "!");
@@ -527,7 +515,7 @@ public class MenuListener implements Listener {
                 MessageUtils.sendMessage(player, "§cYou are muted for another " + remainingText + "!");
                 return;
             } else {
-                player.removeMetadata("muted_until", org.utils.utils.Main.getInstance());
+                player.removeMetadata("muted_until", Main.getInstance());
             }
         }
     }
@@ -542,8 +530,7 @@ public class MenuListener implements Listener {
         }
 
         int clickedSlot = event.getRawSlot();
-        if (clickedSlot >= 27)
-            return; 
+        if (clickedSlot >= 27) return;
 
         ItemStack adminHolding = admin.getItemOnCursor();
         if (adminHolding != null && adminHolding.getType() != Material.AIR) {
@@ -566,7 +553,6 @@ public class MenuListener implements Listener {
 
         if (targetItem != null) {
             target.getEnderChest().setItem(clickedSlot, null);
-
             admin.getInventory().addItem(targetItem.clone());
 
             MessageUtils.sendMessage(admin, "§aTook " + targetItem.getAmount() + "x " +
@@ -589,8 +575,7 @@ public class MenuListener implements Listener {
         }
 
         int clickedSlot = event.getRawSlot();
-        if (clickedSlot >= 41)
-            return;
+        if (clickedSlot >= 41) return;
 
         ItemStack adminHolding = admin.getItemOnCursor();
         if (adminHolding != null && adminHolding.getType() != Material.AIR) {
@@ -662,7 +647,6 @@ public class MenuListener implements Listener {
                 target.getInventory().setItem(clickedSlot, null);
             }
 
-            // Give item to admin
             admin.getInventory().addItem(targetItem.clone());
 
             String itemName = targetItem.getType().name().toLowerCase().replace("_", " ");
@@ -678,25 +662,25 @@ public class MenuListener implements Listener {
     private void openRoleManagementMenu(Player player, Player target) {
         Inventory menu = Bukkit.createInventory(null, 27, "§8Manage Roles - " + target.getName());
 
-        boolean isMod = PermissionUtils.hasTag(target, "mod");
+        boolean isMod = target.getScoreboardTags().contains("mod");
         ItemStack moderator = createItem(
-            Material.EMERALD, 
-            "§aToggle Moderator", 
-            isMod ? "§cDisable Moderator" : "§aEnable Moderator"
+            Material.EMERALD,
+            "§aToggle Moderator",
+            isMod ? "§aEnable Moderator" : "§cDisable Moderator"
         );
 
-        boolean isAdmin = PermissionUtils.hasTag(target, "admin");
+        boolean isAdmin = target.getScoreboardTags().contains("admin");
         ItemStack admin = createItem(
-            Material.DIAMOND, 
-            "§bToggle Admin", 
-            isAdmin ? "§cDisable Admin" : "§aEnable Admin"
+            Material.DIAMOND,
+            "§bToggle Admin",
+            isAdmin ? "§aEnable Admin" : "§cDisable Admin"
         );
 
-        boolean isAdminPlus = PermissionUtils.hasTag(target, "admin+");
+        boolean isAdminPlus = target.getScoreboardTags().contains("admin+");
         ItemStack adminPlus = createItem(
-            Material.NETHERITE_INGOT, 
-            "§cToggle Admin+", 
-            isAdminPlus ? "§cDisable Admin+" : "§aEnable Admin+"
+            Material.NETHERITE_INGOT,
+            "§cToggle Admin+",
+            isAdminPlus ? "§aEnable Admin+" : "§cDisable Admin+"
         );
 
         menu.setItem(11, moderator);
