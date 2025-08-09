@@ -54,7 +54,6 @@ public class Main extends JavaPlugin {
         getCommand("unmute").setExecutor(new org.utils.utils.commands.UnmuteCommand());
         getCommand("combat").setExecutor(new org.utils.utils.commands.CombatCommand());
         getCommand("admin").setExecutor(new org.utils.utils.commands.AdminMenuCommand());
-        getCommand("mod").setExecutor(new org.utils.utils.commands.ModMenuCommand());
     }
 
     public static ConfigManager getConfigManager() {

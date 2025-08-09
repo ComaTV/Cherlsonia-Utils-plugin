@@ -38,9 +38,6 @@ public class MenuListener implements Listener {
         if (title.equals("§8Admin Menu")) {
             event.setCancelled(true);
             handleAdminMenuClick(player, clickedItem);
-        } else if (title.equals("§8Moderator Menu")) {
-            event.setCancelled(true);
-            handleModMenuClick(player, clickedItem);
         } else if (title.startsWith("§8Mute ")) {
             event.setCancelled(true);
             handleMuteDurationClick(player, clickedItem, title);
@@ -136,6 +133,13 @@ public class MenuListener implements Listener {
             case "§bVanish":
                 MessageUtils.sendMessage(player, "§aVanish activated! (Requires SuperVanish plugin)");
                 break;
+                
+            case "Homes":
+                MessageUtils.sendMessage(player, "§aHomes activated! (Requires Homes plugin)");
+                break;
+            case "Waypoints":
+                MessageUtils.sendMessage(player, "§aWaypoints activated! (Requires Waypoints plugin)");
+                break;
             case "§aSpectator Mode":
                 player.setGameMode(GameMode.SPECTATOR);
                 MessageUtils.sendMessage(player, "§aSpectator mode activated!");
@@ -144,11 +148,27 @@ public class MenuListener implements Listener {
                 player.setGameMode(GameMode.SURVIVAL);
                 MessageUtils.sendMessage(player, "§aSurvival mode activated!");
                 break;
+            case "§eCreative Mode":
+                player.setGameMode(GameMode.CREATIVE);
+                MessageUtils.sendMessage(player, "§aCreative mode activated!");
+                break;
             case "§6Manage Claims":
                 MessageUtils.sendMessage(player, "§6Claims management menu - in development");
                 break;
+            case "§aTeleport to Players":
+                openPlayerSelectorMenu(player, "teleport", 0);
+                break;
             case "§dMute Players":
                 openPlayerSelectorMenu(player, "mute_only", 0);
+                break;
+            case "§eView Player Info":
+                openPlayerSelectorMenu(player, "info", 0);
+                break;
+            case "§6Kick Players":
+                openPlayerSelectorMenu(player, "kick", 0);
+                break;
+            case "§4Ban Players":
+                openPlayerSelectorMenu(player, "ban", 0);
                 break;
             case "§cAll Current Operators and Admin Tags":
                 openOperatorManagementMenu(player);
@@ -187,34 +207,6 @@ public class MenuListener implements Listener {
         }
 
         player.openInventory(menu);
-    }
-
-    private void handleModMenuClick(Player player, ItemStack item) {
-        String itemName = item.getItemMeta().getDisplayName();
-
-        switch (itemName) {
-            case "§cMute Players":
-                openPlayerSelectorMenu(player, "mute", 0);
-                break;
-            case "§eView Player Info":
-                openPlayerSelectorMenu(player, "info", 0);
-                break;
-            case "§aTeleport to Players":
-                openPlayerSelectorMenu(player, "teleport", 0);
-                break;
-            case "§fView Player Inventories":
-                openPlayerSelectorMenu(player, "inventory", 0);
-                break;
-            case "§5View Player Ender Chests":
-                openPlayerSelectorMenu(player, "enderchest", 0);
-                break;
-            case "§6Kick Players":
-                openPlayerSelectorMenu(player, "kick", 0);
-                break;
-            case "§4Ban Players":
-                openPlayerSelectorMenu(player, "ban", 0);
-                break;
-        }
     }
 
     private void openPlayerSelectorMenu(Player player, String action, int page) {
@@ -381,27 +373,16 @@ public class MenuListener implements Listener {
         ItemStack mute30min = createItem(Material.REDSTONE, "§cMute 30 Minutes", "§7Mute for 30 minutes");
         ItemStack mute1hour = createItem(Material.REDSTONE, "§cMute 1 Hour", "§7Mute for 1 hour");
         ItemStack mutePermanent = createItem(Material.BARRIER, "§cMute Permanent", "§7Mute permanently");
+        ItemStack unmute = createItem(Material.LIME_DYE, "§aUnmute", "§7Remove mute from player");
 
         menu.setItem(10, mute5min);
         menu.setItem(11, mute15min);
         menu.setItem(12, mute30min);
         menu.setItem(13, mute1hour);
         menu.setItem(14, mutePermanent);
+        menu.setItem(16, unmute);
 
         admin.openInventory(menu);
-    }
-
-    private void showPlayerInfo(Player admin, Player target) {
-        admin.sendMessage("§6=== " + target.getName() + "'s Information ===");
-        admin.sendMessage("§eHealth: §a" + Math.round(target.getHealth()) + "/" + Math.round(target.getMaxHealth()));
-        admin.sendMessage("§eFood: §a" + target.getFoodLevel() + "/20");
-        admin.sendMessage("§eXP Level: §a" + target.getLevel());
-        admin.sendMessage("§eGamemode: §a" + target.getGameMode().toString());
-        admin.sendMessage("§eWorld: §a" + target.getWorld().getName());
-        admin.sendMessage("§eLocation: §a" + Math.round(target.getLocation().getX()) + ", " +
-                Math.round(target.getLocation().getY()) + ", " + Math.round(target.getLocation().getZ()));
-        admin.sendMessage("§ePing: §a" + target.getPing() + "ms");
-        admin.sendMessage("§eIP: §a" + target.getAddress().getAddress().getHostAddress());
     }
 
     private void handleMuteDurationClick(Player admin, ItemStack clickedItem, String title) {
@@ -431,7 +412,30 @@ public class MenuListener implements Listener {
             case "§cMute Permanent":
                 mutePlayer(admin, target, -1);
                 break;
+            case "§aUnmute":
+                unmutePlayer(admin, target);
+                break;
         }
+    }
+
+    private void unmutePlayer(Player admin, Player target) {
+        target.removeMetadata("muted", Main.getInstance());
+        target.removeMetadata("muted_until", Main.getInstance());
+        MessageUtils.sendMessage(admin, "§aUnmuted " + target.getName() + "!");
+        MessageUtils.sendMessage(target, "§aYou have been unmuted by " + admin.getName() + "!");
+    }
+
+
+    private void showPlayerInfo(Player admin, Player target) {
+        admin.sendMessage("§6=== " + target.getName() + "'s Information ===");
+        admin.sendMessage("§eHealth: §a" + Math.round(target.getHealth()) + "/" + Math.round(target.getMaxHealth()));
+        admin.sendMessage("§eFood: §a" + target.getFoodLevel() + "/20");
+        admin.sendMessage("§eXP Level: §a" + target.getLevel());
+        admin.sendMessage("§eGamemode: §a" + target.getGameMode().toString());
+        admin.sendMessage("§eWorld: §a" + target.getWorld().getName());
+        admin.sendMessage("§eLocation: §a" + Math.round(target.getLocation().getX()) + ", " +
+                Math.round(target.getLocation().getY()) + ", " + Math.round(target.getLocation().getZ()));
+        admin.sendMessage("§ePing: §a" + target.getPing() + "ms");
     }
 
     private void handleEnderChestMuteClick(Player admin, ItemStack clickedItem, String title) {
@@ -694,5 +698,6 @@ public class MenuListener implements Listener {
         item.setItemMeta(meta);
         return item;
     }
+    
 
 }

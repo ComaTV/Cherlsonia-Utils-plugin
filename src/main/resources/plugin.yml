@@ -49,6 +49,3 @@ commands:
   admin:
     description: Opens the admin menu (admin only)
     usage: /admin
-  mod:
-    description: Opens the moderator menu (mod only)
-    usage: /mod
